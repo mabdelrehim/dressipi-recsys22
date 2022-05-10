@@ -164,7 +164,7 @@ def main(cfg):
     train_split = cfg.get('dataset/train_split')
     valid_split = cfg.get('dataset/valid_split')
     candidate_items_path = cfg.get('dataset/candidate_items_path')
-    item_features_path = cfg.get('dataset/item_features_pathgit')
+    item_features_path = cfg.get('dataset/item_features_path')
     train_dataset = SessionGraphDataset(data_root, train_split, candidate_items_path, item_features_path)
     valid_dataset = SessionGraphDataset(data_root, valid_split, candidate_items_path, item_features_path)
     
