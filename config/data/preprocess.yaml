@@ -1,0 +1,3 @@
+dataset: 'dressipi_recsys22'
+root: 'datasets/dressipi_recsys22'
+seed: 42

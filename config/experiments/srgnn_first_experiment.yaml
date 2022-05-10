@@ -1,0 +1,29 @@
+device: 'cpu'
+seed: 42
+dataset: 
+  name: 'dressipi_recsys22'
+  path: 'datasets/dressipi_recsys22/prepared_json'
+  train_split: train
+  valid_split: valid
+  implementation: 'session_graph_dataset'
+  num_items: 23692
+  candidate_items_path: 'datasets/dressipi_recsys22/prepared_json/raw/candidate_items.json'
+  item_features_path: 'datasets/dressipi_recsys22/prepared_json/raw/item_features.json'
+model:
+  name: 'srgnn'
+  aggregation: 'add'
+  hidden_dim: 50
+  save_dir: 'checkpoints'
+training:
+  batch_size: 100
+  num_epochs: 100
+  optimizer:
+    name: 'adam'
+    lr: 0.001
+    weight_decay: 0.00001
+  lr_scheduler:
+    name: 'step_lr'
+    step_size: 30
+    gamma: 0.1
+  criterion:
+    name: 'cross_entropy_loss'
