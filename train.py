@@ -135,6 +135,7 @@ def main(cfg):
     hidden_dim = cfg.get('model/hidden_dim')
     aggr = cfg.get('model/aggregation')
     model = SRGNN(hidden_dim, num_items, aggr)
+    model.to(device)
     wandb.log({
       'model': str(model),
       'device': device
@@ -195,7 +196,7 @@ def main(cfg):
   trainer.train(num_epochs, save_dir)
 
 if __name__ == "__main__":
-  parser = argparse.ArgumentParser('Preprocess session data from csv format to json format.', parents=[get_args_parser()])
+  parser = argparse.ArgumentParser('Trainer', parents=[get_args_parser()])
   args = parser.parse_args()
   cfg = Config(args.config)
   main(cfg)

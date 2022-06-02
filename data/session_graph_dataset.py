@@ -52,3 +52,21 @@ class SessionGraphDataset(pyg_data.InMemoryDataset):
 
       data, slices = self.collate(data_list)
       torch.save((data, slices), self.processed_paths[0])
+    else:
+      for session in sessions:
+        session = session['items']
+        
+        session = [0] + session
+        for i in range(len(session)):
+          session[i] = self.items_dict.get_idx(session[i])
+
+        codes, uniques = pd.factorize(session)
+        senders, receivers = codes[:-1], codes[1:]
+
+        # Build Data instance
+        edge_index = torch.tensor([senders, receivers], dtype=torch.long)
+        x = torch.tensor(uniques, dtype=torch.long).unsqueeze(1)
+        data_list.append(pyg_data.Data(x=x, edge_index=edge_index))
+
+      data, slices = self.collate(data_list)
+      torch.save((data, slices), self.processed_paths[0])

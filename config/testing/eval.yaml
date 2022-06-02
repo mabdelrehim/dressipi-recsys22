@@ -1,0 +1,18 @@
+device: 'cpu'
+seed: 42
+dataset: 
+  name: 'dressipi_recsys22'
+  path: 'datasets/dressipi_recsys22/prepared_json'
+  test_split: test_leaderboard
+  implementation: 'session_graph_dataset'
+  num_items: 23692
+  candidate_items_path: 'datasets/dressipi_recsys22/prepared_json/raw/candidate_items.json'
+  item_features_path: 'datasets/dressipi_recsys22/prepared_json/raw/item_features.json'
+  sessions: 'datasets/dressipi_recsys22/prepared_json/raw/test_leaderboard.json'
+model:
+  name: 'srgnn'
+  aggregation: 'add'
+  hidden_dim: 50
+  checkpoint: 'checkpoints/model.pt'
+batch_size: 1 # only batch size 1 is supported
+save_path: 'outputs/test_leaderboard.csv'

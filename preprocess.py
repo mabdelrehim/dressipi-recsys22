@@ -2,6 +2,8 @@ import pandas as pd
 import argparse
 import json
 import os
+import random
+from sklearn.utils import shuffle
 from tqdm.auto import tqdm
 from utils import NpEncoder, Config
 from sklearn.model_selection import train_test_split
@@ -112,13 +114,28 @@ def preprocess_dressipi(cfg):
   
   print("Preprosessing training dataset")
   preprocessed_train_data = get_sessions(train_sessions, train_purchases)
-  train_data, valid_data = train_test_split(preprocessed_train_data, test_size=0.15, random_state=cfg.get('seed'))
-  json_data = json.dumps(train_data, indent=2, cls=NpEncoder)
+  random.seed(cfg.get('seed'))
+  random.shuffle(preprocessed_train_data)
+  test_candidates = set(candidate_items['item_id'].to_list())
+  test_valid_size = cfg.get('test_valid_size')
+  test_valid_split = []
+  train_split = []
+  for i, session in enumerate(preprocessed_train_data):
+    if session['purchase'] in test_candidates and i < test_valid_size:
+      test_valid_split.append(session)
+    else:
+      train_split.append(session)
+  test_local, valid_data = train_test_split(test_valid_split, test_size=0.285714286, random_state=cfg.get('seed'))
+  json_data = json.dumps(train_split, indent=2, cls=NpEncoder)
   out_file_path = os.path.join(preprocessed_dir, 'train.json')
   with open(out_file_path, 'w') as out_file:
     out_file.write(json_data)
   json_data = json.dumps(valid_data, indent=2, cls=NpEncoder)
   out_file_path = os.path.join(preprocessed_dir, 'valid.json')
+  with open(out_file_path, 'w') as out_file:
+    out_file.write(json_data)
+  json_data = json.dumps(test_local, indent=2, cls=NpEncoder)
+  out_file_path = os.path.join(preprocessed_dir, 'test_local.json')
   with open(out_file_path, 'w') as out_file:
     out_file.write(json_data)
 
